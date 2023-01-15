@@ -28,7 +28,7 @@ public class SessaoService {
                 new ObjectNotFoundException("Sessão de ID: " + id + " não encontrada"));
     }
 
-    @Transactional(rollbackFor = ObjectNotFoundException.class)
+    @Transactional(rollbackFor = RuntimeException.class)
     public Sessao openSession(SessaoDTO sessaoDTO) {
         Sessao sessao = fromDTO(sessaoDTO);
         sessao.setStartDate(new Date());
