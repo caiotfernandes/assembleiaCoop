@@ -30,8 +30,10 @@ public class Sessao implements Serializable {
     @JoinColumn(name = "pauta_id")
     private Pauta pauta;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
 
     @OneToMany(mappedBy = "id.sessao")
