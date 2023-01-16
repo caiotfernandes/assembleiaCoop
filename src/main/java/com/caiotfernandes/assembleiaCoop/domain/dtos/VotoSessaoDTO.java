@@ -18,11 +18,11 @@ public class VotoSessaoDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 6010293462423167762L;
 
-    @NotNull
+    @NotNull(message = "sessaoId deve ser informado")
     private Long sessaoId;
-    @NotNull
+    @NotNull(message = "associadoId deve ser informado")
     private Long associadoId;
-    @NotNull
+    @NotNull(message = "voto deve ser informado")
     private String voto;
 
     public static VotoSessaoDTO fromVotoSessao(VotoSessao votoSessao) {

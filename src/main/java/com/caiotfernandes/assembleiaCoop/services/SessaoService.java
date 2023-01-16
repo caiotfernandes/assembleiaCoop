@@ -77,7 +77,7 @@ public class SessaoService {
 
         for (VotoSessao vt : sessao.getVotoList()) {
             if (vt.equals(votoSessao)) {
-                throw new IllegalArgumentException("Cada associado só pode votar 1 vez por sessão.");
+                throw new IllegalStateException("Cada associado só pode votar 1 vez por sessão.");
             }
         }
 

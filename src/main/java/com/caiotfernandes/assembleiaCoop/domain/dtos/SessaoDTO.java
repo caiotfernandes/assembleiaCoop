@@ -18,7 +18,7 @@ public class SessaoDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = -5436917786182246788L;
 
-    @NotNull
+    @NotNull(message = "pautaId deve ser informado")
     private Long pautaId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
