@@ -1,6 +1,7 @@
 package com.caiotfernandes.assembleiaCoop.services;
 
 import com.caiotfernandes.assembleiaCoop.domain.dtos.SessaoDTO;
+import com.caiotfernandes.assembleiaCoop.domain.dtos.SessaoResultadoDTO;
 import com.caiotfernandes.assembleiaCoop.domain.dtos.VotoSessaoDTO;
 import com.caiotfernandes.assembleiaCoop.domain.entities.Associado;
 import com.caiotfernandes.assembleiaCoop.domain.entities.Pauta;
@@ -56,9 +57,7 @@ public class SessaoService {
     }
 
     public void addVotoSessao(VotoSessaoDTO votoSessaoDTO) {
-        Optional<Sessao> optSessao = sessaoRepository.findById(votoSessaoDTO.getSessaoId());
-        Sessao sessao = optSessao.orElseThrow(() ->
-                new ObjectNotFoundException("Sessão de ID: " + votoSessaoDTO.getSessaoId() + " não encontrada."));
+        Sessao sessao = getSessionById(votoSessaoDTO.getSessaoId());
 
         if (new Date().after(sessao.getEndDate())) {
             throw new ClosedSessionException("Sessão de pauta: " + sessao.getPauta().getName() + " já encerrada.");
@@ -84,6 +83,37 @@ public class SessaoService {
 
         sessao.getVotoList().add(votoSessao);
         sessaoRepository.save(sessao);
+    }
+
+    public SessaoResultadoDTO getResult(Long sessionId) {
+
+        Sessao sessao = getSessionById(sessionId);
+
+        long qtdSim = sessao.getVotoList().stream()
+                .map(e -> e.getVoto())
+                .filter(e -> e.equals(Voto.SIM))
+                .count();
+
+        long qtdNao = sessao.getVotoList().stream()
+                .map(e -> e.getVoto())
+                .filter(e -> e.equals(Voto.NAO))
+                .count();
+
+        SessaoResultadoDTO.SessaoResultadoDTOBuilder dtoBuilder =
+                SessaoResultadoDTO.builder()
+                .sessaoId(sessionId)
+                .nomePauta(sessao.getPauta().getName())
+                .quantidadeVotos(sessao.getVotoList().stream().count());
+
+        if (qtdSim > qtdNao) {
+            dtoBuilder.resultado(Voto.SIM.toString());
+        } else if (qtdNao > qtdSim) {
+            dtoBuilder.resultado(Voto.NAO.toString());
+        } else {
+            dtoBuilder.resultado("Empate");
+        }
+
+        return dtoBuilder.build();
     }
 
     public static Sessao fromDTO(SessaoDTO sessaoDTO) {

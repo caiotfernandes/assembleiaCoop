@@ -1,6 +1,7 @@
 package com.caiotfernandes.assembleiaCoop.resources;
 
 import com.caiotfernandes.assembleiaCoop.domain.dtos.SessaoDTO;
+import com.caiotfernandes.assembleiaCoop.domain.dtos.SessaoResultadoDTO;
 import com.caiotfernandes.assembleiaCoop.domain.dtos.VotoSessaoDTO;
 import com.caiotfernandes.assembleiaCoop.domain.entities.Sessao;
 import com.caiotfernandes.assembleiaCoop.services.SessaoService;
@@ -35,8 +36,13 @@ public class SessaoController {
         return ResponseEntity.ok().body(sessaoService.getSessionById(id));
     }
 
-    @PostMapping("/votoSessao")
+    @PostMapping("/votar")
     public void votarSessao(@RequestBody @Valid VotoSessaoDTO votoSessaoDTO) {
         sessaoService.addVotoSessao(votoSessaoDTO);
+    }
+
+    @GetMapping("/resultados/{id}")
+    public ResponseEntity<SessaoResultadoDTO> getResults(@PathVariable Long id) {
+        return ResponseEntity.ok().body(sessaoService.getResult(id));
     }
 }
