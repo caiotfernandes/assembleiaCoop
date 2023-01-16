@@ -1,9 +1,15 @@
 package com.caiotfernandes.assembleiaCoop.services;
 
 import com.caiotfernandes.assembleiaCoop.domain.dtos.SessaoDTO;
+import com.caiotfernandes.assembleiaCoop.domain.dtos.VotoSessaoDTO;
+import com.caiotfernandes.assembleiaCoop.domain.entities.Associado;
 import com.caiotfernandes.assembleiaCoop.domain.entities.Pauta;
 import com.caiotfernandes.assembleiaCoop.domain.entities.Sessao;
+import com.caiotfernandes.assembleiaCoop.domain.entities.VotoSessao;
+import com.caiotfernandes.assembleiaCoop.domain.enums.Voto;
+import com.caiotfernandes.assembleiaCoop.repositories.AssociadoRepository;
 import com.caiotfernandes.assembleiaCoop.repositories.SessaoRepository;
+import com.caiotfernandes.assembleiaCoop.services.exceptions.ClosedSessionException;
 import com.caiotfernandes.assembleiaCoop.services.exceptions.InvalidDateException;
 import com.caiotfernandes.assembleiaCoop.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +27,9 @@ public class SessaoService {
 
     @Autowired
     private PautaService pautaService;
+
+    @Autowired
+    private AssociadoRepository associadoRepository;
 
     public Sessao getSessionById(Long id) {
         Optional<Sessao> opt = sessaoRepository.findById(id);
@@ -44,6 +53,37 @@ public class SessaoService {
         sessao.setPauta(pauta);
 
         return sessaoRepository.save(sessao);
+    }
+
+    public void addVotoSessao(VotoSessaoDTO votoSessaoDTO) {
+        Optional<Sessao> optSessao = sessaoRepository.findById(votoSessaoDTO.getSessaoId());
+        Sessao sessao = optSessao.orElseThrow(() ->
+                new ObjectNotFoundException("Sessão de ID: " + votoSessaoDTO.getSessaoId() + " não encontrada."));
+
+        if (new Date().after(sessao.getEndDate())) {
+            throw new ClosedSessionException("Sessão de pauta: " + sessao.getPauta().getName() + " já encerrada.");
+        }
+
+        Optional<Associado> optAssociado = associadoRepository.findById(votoSessaoDTO.getAssociadoId());
+        Associado associado = optAssociado.orElseThrow(() ->
+                new ObjectNotFoundException("Associado de ID: " + votoSessaoDTO.getAssociadoId() + " não encontrado."));
+
+        if (!votoSessaoDTO.getVoto().equalsIgnoreCase("SIM") &&
+                !votoSessaoDTO.getVoto().equalsIgnoreCase("NÃO") &&
+                !votoSessaoDTO.getVoto().equalsIgnoreCase("NAO")) {
+            throw new IllegalStateException("O Voto deve ser 'SIM' ou 'NÃO'");
+        }
+
+        VotoSessao votoSessao = new VotoSessao(sessao, associado, votoSessaoDTO.getVoto().equalsIgnoreCase("SIM") ? Voto.SIM : Voto.NAO);
+
+        for (VotoSessao vt : sessao.getVotoList()) {
+            if (vt.equals(votoSessao)) {
+                throw new IllegalArgumentException("Cada associado só pode votar 1 vez por sessão.");
+            }
+        }
+
+        sessao.getVotoList().add(votoSessao);
+        sessaoRepository.save(sessao);
     }
 
     public static Sessao fromDTO(SessaoDTO sessaoDTO) {

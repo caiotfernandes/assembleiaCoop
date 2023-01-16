@@ -1,5 +1,6 @@
 package com.caiotfernandes.assembleiaCoop.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,6 +37,10 @@ public class Sessao implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
 
-    @OneToMany(mappedBy = "id.sessao")
+    @Setter(AccessLevel.NONE)
+    @OneToMany(mappedBy = "sessao",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<VotoSessao> votoList = new ArrayList<>();
 }
