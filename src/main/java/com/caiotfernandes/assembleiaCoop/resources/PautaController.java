@@ -3,6 +3,7 @@ package com.caiotfernandes.assembleiaCoop.resources;
 import com.caiotfernandes.assembleiaCoop.domain.dtos.PautaDTO;
 import com.caiotfernandes.assembleiaCoop.domain.entities.Pauta;
 import com.caiotfernandes.assembleiaCoop.services.PautaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class PautaController {
     private PautaService pautaService;
 
     @PostMapping
-    public ResponseEntity<PautaDTO> insertPauta(@RequestBody PautaDTO pautaDTO) {
+    public ResponseEntity<PautaDTO> insertPauta(@RequestBody @Valid PautaDTO pautaDTO) {
         Pauta pauta = pautaService.insertPauta(PautaService.fromDTO(pautaDTO));
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
