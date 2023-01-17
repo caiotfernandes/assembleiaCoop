@@ -31,7 +31,7 @@ public class AssociadoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AssociadoDTO> getAssociado(@PathVariable Long id) {
-        Associado associado = associadoService.getAssociadoById(id);
+        Associado associado = associadoService.findById(id);
         return ResponseEntity.ok().body(AssociadoDTO.fromAssociado(associado));
     }
 }

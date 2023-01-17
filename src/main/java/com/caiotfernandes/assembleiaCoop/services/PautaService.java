@@ -16,7 +16,6 @@ public class PautaService {
     private PautaRepository pautaRepository;
 
     public Pauta insertPauta(Pauta pauta) {
-
         return pautaRepository.save(pauta);
     }
 

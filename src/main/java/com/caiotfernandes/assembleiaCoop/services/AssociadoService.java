@@ -15,7 +15,7 @@ public class AssociadoService {
     @Autowired
     private AssociadoRepository associadoRepository;
 
-    public Associado getAssociadoById(Long id) {
+    public Associado findById(Long id) {
         Optional<Associado> opt = associadoRepository.findById(id);
         return opt.orElseThrow(() ->
                 new ObjectNotFoundException("Associado de ID: " + id + " não encontrado"));
