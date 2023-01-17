@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.TimeZone;
 
-@Profile("!test")
+@Profile("test")
 @Configuration
 public class Instantiation implements CommandLineRunner {
 
