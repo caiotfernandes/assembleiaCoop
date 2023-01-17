@@ -32,8 +32,8 @@ public class SessaoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Sessao> getSession(@PathVariable Long id) {
-        return ResponseEntity.ok().body(sessaoService.getSessionById(id));
+    public ResponseEntity<SessaoDTO> getSession(@PathVariable Long id) {
+        return ResponseEntity.ok().body(SessaoDTO.fromSessao(sessaoService.getSessionById(id)));
     }
 
     @PostMapping("/votar")

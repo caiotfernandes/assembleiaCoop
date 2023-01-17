@@ -1,5 +1,6 @@
 package com.caiotfernandes.assembleiaCoop.domain.dtos;
 
+import com.caiotfernandes.assembleiaCoop.domain.entities.Sessao;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -23,4 +24,11 @@ public class SessaoDTO implements Serializable {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     private Date endDate;
+
+    public static SessaoDTO fromSessao(Sessao sessao) {
+        return builder()
+                .pautaId(sessao.getPauta().getId())
+                .endDate(sessao.getEndDate())
+                .build();
+    }
 }

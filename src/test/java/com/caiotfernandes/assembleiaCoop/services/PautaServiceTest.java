@@ -8,6 +8,7 @@ import com.caiotfernandes.assembleiaCoop.services.exceptions.ObjectNotFoundExcep
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
@@ -15,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
+@ActiveProfiles("unit-test")
 class PautaServiceTest extends ApplicationConfigTest {
 
     @Autowired

@@ -8,7 +8,6 @@ import com.caiotfernandes.assembleiaCoop.domain.entities.Pauta;
 import com.caiotfernandes.assembleiaCoop.domain.entities.Sessao;
 import com.caiotfernandes.assembleiaCoop.domain.entities.VotoSessao;
 import com.caiotfernandes.assembleiaCoop.domain.enums.Voto;
-import com.caiotfernandes.assembleiaCoop.repositories.AssociadoRepository;
 import com.caiotfernandes.assembleiaCoop.repositories.SessaoRepository;
 import com.caiotfernandes.assembleiaCoop.services.exceptions.ClosedSessionException;
 import com.caiotfernandes.assembleiaCoop.services.exceptions.InvalidDateException;
@@ -30,7 +29,7 @@ public class SessaoService {
     private PautaService pautaService;
 
     @Autowired
-    private AssociadoRepository associadoRepository;
+    private AssociadoService associadoService;
 
     public Sessao getSessionById(Long id) {
         Optional<Sessao> opt = sessaoRepository.findById(id);
@@ -63,9 +62,7 @@ public class SessaoService {
             throw new ClosedSessionException("Sessão de pauta: " + sessao.getPauta().getName() + " já encerrada.");
         }
 
-        Optional<Associado> optAssociado = associadoRepository.findById(votoSessaoDTO.getAssociadoId());
-        Associado associado = optAssociado.orElseThrow(() ->
-                new ObjectNotFoundException("Associado de ID: " + votoSessaoDTO.getAssociadoId() + " não encontrado."));
+        Associado associado = associadoService.findById(votoSessaoDTO.getAssociadoId());
 
         if (!votoSessaoDTO.getVoto().equalsIgnoreCase("SIM") &&
                 !votoSessaoDTO.getVoto().equalsIgnoreCase("NÃO") &&
